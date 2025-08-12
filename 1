@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>$LZMH Stock Clock</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: monospace;
+    }
+    #price {
+      font-size: 20vw;
+      font-weight: bold;
+    }
+    #time {
+      font-size: 6vw;
+      color: #888;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="price">--</div>
+  <div id="time">Loading...</div>
+
+  <script>
+    async function fetchPrice() {
+      try {
+        const response = await fetch("https://query1.finance.yahoo.com/v8/finance/chart/LZMH?interval=1m");
+        const data = await response.json();
+        const price = data.chart.result[0].meta.regularMarketPrice;
+        document.getElementById("price").innerText = "$" + price.toFixed(2);
+      } catch (e) {
+        document.getElementById("price").innerText = "Error";
+      }
+      document.getElementById("time").innerText = new Date().toLocaleTimeString();
+    }
+
+    fetchPrice();
+    setInterval(fetchPrice, 15000); // refresh every 15 sec
+
+    document.body.addEventListener("click", fetchPrice);
+  </script>
+</body>
+</html>
